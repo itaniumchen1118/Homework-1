@@ -15,23 +15,17 @@ LinkedList::LinkedList(const LinkedList& rhs)
 {
 	if (rhs.head != nullptr)
 	{
-		head = nullptr; //safety I guess
+		head = new Node{ rhs.head->value, nullptr };
 
-		head = new Node;
-		head->value = rhs.head->value;
-		head->next = rhs.head->next;
-
-		Node* p = rhs.head; //iterator
+		Node* p = rhs.head->next; //iterator
 		Node* curr = head;
-		while (p->next != nullptr)
+		while (p != nullptr)
 		{
-			curr->next = new Node;
-			curr->next->value = p->next->value;
+			curr->next = new Node{ p->value, nullptr };
 
 			curr = curr->next;
 			p = p->next;
 		}
-		curr->next = nullptr;
 	}
 }
 
@@ -76,13 +70,18 @@ void LinkedList::printList() const
 
 bool LinkedList::get(int i, ItemType& item) const
 {
-	Node* p = head;
-	for (int j = 1; j <= i; j ++)
-	{
-		p = p->next;
+	if (head != nullptr && i < size()) {
+		Node* p = head;
+		for (int j = 1; j <= i; j++)
+		{
+			p = p->next;
+		}
+		item = p->value;
+		return true;
 	}
-	item = p->value;
-	return true;
+	else {
+		return false;
+	}
 }
 
 void LinkedList::reverseList()
