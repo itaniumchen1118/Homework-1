@@ -1,5 +1,11 @@
 #include "LinkedList.h"
 
+#include <algorithm>
+#include <iostream>
+#include <sstream>
+
+using namespace std;
+
 void LinkedList::addAfter(Node* node, const ItemType& val)
 {
 	Node* p = new Node{ val, nullptr };
@@ -11,7 +17,7 @@ LinkedList::LinkedList()
 	head = nullptr;
 }
 
-LinkedList::LinkedList(const LinkedList& rhs)
+LinkedList::LinkedList(const LinkedList& rhs) : head(rhs.head), count(rhs.count)
 {
 	if (rhs.head != nullptr)
 	{
@@ -57,6 +63,7 @@ void LinkedList::insertToFront(const ItemType& val)
 {
 	Node* p = new Node{ val, head };
 	head = p;
+	++count;
 }
 
 void LinkedList::printList() const
@@ -70,9 +77,9 @@ void LinkedList::printList() const
 
 bool LinkedList::get(int i, ItemType& item) const
 {
-	if (head != nullptr && i < size()) {
+	if (i < size()) {
 		Node* p = head;
-		for (int j = 1; j <= i; j++)
+		while (i-- > 0)
 		{
 			p = p->next;
 		}
@@ -114,31 +121,33 @@ void LinkedList::append(const LinkedList& other)
 	root.next = head;
 	Node* p = &root;
 	while (p->next != nullptr) {
+		// go to the end of the list
 		p = p->next;
 	}
 	for (Node* q = other.head; q != nullptr; q = q->next) {
-		addAfter(p, q->value);
-		p = p->next;
+		// create a new node with the value in the other list
+		Node* newNode = new Node{ q->value, nullptr };
+		p->next = newNode;
+		p = newNode;
 	}
+
 	head = root.next;
+	count += other.count;
 }
 
 void LinkedList::swap(LinkedList& other)
 {
-	Node* temp = this->head;
-	this->head = other.head;
-	other.head = temp;
-	temp = nullptr;
+	Node* tempNode = head;
+	head = other.head;
+	other.head = tempNode;
+
+
+	int tempCount = count;
+	count = other.count;
+	other.count = tempCount;
 }
 
 int LinkedList::size() const
 {
-	int n = 0;
-	Node* p = head;
-	while (p != nullptr)
-	{
-		n++;
-		p = p->next;
-	}
-	return n;
+	return count;
 }

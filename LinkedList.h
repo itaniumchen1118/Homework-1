@@ -1,7 +1,5 @@
 #pragma once
-#include <iostream>
 #include <string>
-using namespace std;
 
 typedef std::string ItemType;
 
@@ -13,9 +11,10 @@ struct Node {
 class LinkedList {
 
 private:
-	Node* head;
+	Node* head = nullptr;
+	int count = 0;
 
-	void addAfter(Node * node, const ItemType& val);
+	void addAfter(Node* node, const ItemType& val);
 
 public:
 	// default constructor
